@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/petergyang/no-ai-slop",
+  "tag": "v1.0.6",
+  "tagCommit": "f2b25e603800dfc01ba93f1092056724eb93059e",
+  "reviewedCommit": "000650b156983f5159695b441477f4e63b25dc85",
+  "upstreamSkill": "skills/no-ai-slop/SKILL.md",
+  "installedAt": "2026-07-29",
+  "updatedAt": "2026-10-04",
+  "reviewedAt": "2026-10-04",
+  "adaptationVersion": "1.0.6-omp.3",
+  "adaptation": "OMP-native hardened adaptation: explicit activation and bounded scope; untrusted-draft boundary; exact protected-token and subject-fact binding; technical qualifier preservation; contextual rather than absolute style rules; portability and interpretive-metadiscourse checks from post-v1.0.6 upstream; bounded self-review; and a regression fixture corpus. The broader upstream auto-trigger, banned-word absolutism, and prohibition on technical or inanimate subjects remain intentionally excluded. ChatGPT plugin metadata, artwork, build script, CI workflow, privacy policy, and terms are also excluded. omp.3: honors standing em-dash bans from user or project instructions, drops OMP-only model names (smol/tiny), and adopts upstream 000650b's lighter voice-signal step."
+}
