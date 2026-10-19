@@ -39,6 +39,7 @@ curl -fsSL https://raw.githubusercontent.com/AlifAzwar/agent-setup-public/main/i
 * **`vercel-composition-patterns`:** Modern React 19 composition patterns, compound components, and clean state lifting.
 * **`no-ai-slop`:** Eliminates robotic cadence, cheesy buzzwords, and unnecessary code comments.
 * **`review`:** Read-only pre-landing review workflow with confidence scoring and risk audit.
+* **`qa-automation`:** Turns a QA scenario guide into Playwright tests that run against staging in headless Edge, verifies each failure with screenshots and source code, and writes a Word report (table of contents, findings, screenshots). Includes a re-test checklist for developer fixes.
 
 ### 4. Automated CI Workflow (`.github/workflows/ci.yml`)
 * Automated GitHub Actions pipeline that verifies `npm run check` (linter and production build) on every push and Pull Request to both `main` and `dev` branches.
