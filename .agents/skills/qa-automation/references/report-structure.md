@@ -7,12 +7,13 @@
 3. Summary: totals (tests, passed, failed, findings by severity). For a first report, add the four questions: what is being built, why, how it works, how modules connect.
 4. Verdicts on ambiguous points: what you decided and the evidence (PRD section, guide step, code file).
 5. Findings table: ID, severity, test code, title.
-6. Finding details: what happened, impact, likely cause, screenshot.
+6. Finding details, in plain language: what happened, expected, impact, steps, screenshot. New bugs only: then a "Technical evidence (for developers)" sub-block (endpoint/status table, trimmed payload and response, likely cause). See "Reporting rules" in SKILL.md.
 7. Results per scenario code: table, then one section per code with result, short reason, screenshots.
 8. Label differences between guide and screen.
 9. Not tested and why.
 10. Test data left on staging.
 11. How to re-run.
+12. Appendix (optional): long technical evidence per finding, linked from the finding.
 
 For a re-test report, replace 5–6 with a checklist: finding, commit, status (Fixed / Partial / Not touched / Not a bug / New regression), evidence.
 
@@ -44,10 +45,13 @@ For a re-test report, replace 5–6 with a checklist: finding, commit, status (F
       { "h2": "2.1 F-01 Package price ignores catalog price" },
       { "label": ["Severity", "Critical"] },
       { "p": "What happened…" },
-      { "figure": ["QA-2__package-vs-bom", "F-01 — package price"] }
+      { "figure": ["QA-2__package-vs-bom", "F-01 — package price"] },
+      { "p": "Technical evidence (for developers)" },
+      { "table": { "head": ["Endpoint", "Status", "Field", "Sent", "Received"], "rows": [["POST /quotations", "201", "total", "350000", "300000"]], "widths": [2400, 1000, 1600, 1900, 1887] } },
+      { "code": "{\n  \"package_id\": 12,\n  \"total\": 300000,\n  …\n}" }
     ] }
   ]
 }
 ```
 
-Block types: `p`, `h2`, `label` (bold label + text), `bullets`, `table` (`head`, `rows`, `widths`), `figure` (`[screenshot name without .jpg, caption]`), `pagebreak`.
+Block types: `p`, `h2`, `label` (bold label + text), `bullets`, `table` (`head`, `rows`, `widths`), `figure` (`[screenshot name without .jpg, caption]`), `code` (monospace, grey background, keeps line breaks; use for trimmed JSON payloads/responses), `pagebreak`.

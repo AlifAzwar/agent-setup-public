@@ -51,6 +51,47 @@ export async function shot(page: Page, info: TestInfo, label: string, opts: { fu
   await info.attach(label, { path: file, contentType: "image/png" });
 }
 
+const API_DIR = path.join(SHOT_DIR, "..", "api");
+const SECRET_KEY = /token|password|secret|authorization|cookie/i;
+
+/** Replaces secret-looking values (tokens, passwords, auth headers) with "***" before anything is saved. */
+function mask(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(mask);
+  if (value && typeof value === "object")
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, SECRET_KEY.test(k) ? "***" : mask(v)]));
+  return value;
+}
+
+/**
+ * Evidence for a new bug: runs `action`, waits for the API call matching `url`, and saves method, path,
+ * status, request payload, and response (secrets masked) to qa-report/api/<CODE>__<label>.json.
+ * Trim the saved JSON to the relevant fields before it goes into the report.
+ */
+export async function captureApi(page: Page, info: TestInfo, label: string, url: RegExp | string, action: () => Promise<unknown>) {
+  const [res] = await Promise.all([page.waitForResponse(url), action()]);
+  const req = res.request();
+  const json = async (read: () => unknown) => {
+    try {
+      return mask(await read());
+    } catch {
+      return null;
+    }
+  };
+  const record = {
+    method: req.method(),
+    path: new URL(res.url()).pathname,
+    status: res.status(),
+    request: await json(() => req.postDataJSON()),
+    response: await json(() => res.json()),
+  };
+  fs.mkdirSync(API_DIR, { recursive: true });
+  const code = info.title.split(" ")[0];
+  const file = path.join(API_DIR, `${code}__${label.replace(/[^a-z0-9-]+/gi, "-")}.json`);
+  fs.writeFileSync(file, JSON.stringify(record, null, 2));
+  await info.attach(`api-${label}`, { path: file, contentType: "application/json" });
+  return record;
+}
+
 /** Non-fatal observation (renamed label, known bug seen mid-chain). Shows up in summary.json. */
 export function note(info: TestInfo, text: string) {
   info.annotations.push({ type: "finding", description: text });
