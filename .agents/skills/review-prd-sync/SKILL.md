@@ -28,7 +28,7 @@ git -C <repo> log -n 3 --format="%h %ad %s" --date=iso
 
 ### 2. Read the document in five parts
 
-Read the whole document, not just the headings. Extract:
+Read the whole document, not just the headings: it is the input of this task, so `token-efficiency.md`'s slice-reading rule applies to code, not to the PRD. Extract:
 
 1. **Goal and users**: which operational problem it solves and who uses it.
 2. **Scope**: what is in scope for this phase and what is explicitly out of scope or deferred.
@@ -40,7 +40,7 @@ Note anything ambiguous or contradictory. Settle it from the rest of the documen
 
 ### 3. Check the real code
 
-Open and read the files; do not infer from file names. Use the layer map in `references/project.md`. Typically:
+Open and read the files; do not infer from file names. Search first, then read the relevant range of each file (whole files only when they are short), in line with `token-efficiency.md`. Use the layer map in `references/project.md`, and check the project's domain rules listed there. Typically:
 
 - **Database**: migrations or schema. Does the table or column already exist?
 - **Domain and services**: models, status constants, validation and calculation logic.

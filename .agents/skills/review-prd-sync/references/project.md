@@ -29,3 +29,15 @@ Fill this once per project. The skill reads it before every review. Replace the 
 How work moves between modules, used for "How does it connect?".
 
 - Example: Customer service → Cashier → Warehouse.
+
+## Domain rules worth checking
+
+Rules that PRDs in this project often touch. Check each one that applies against the code.
+
+- Example: order status flow `DRAFT → LOCKED → WAITING_PAYMENT → CONFIRMED`.
+- Example: minimum down payment, outstanding balance, no duplicate card-terminal receipt numbers.
+- Example: receipt print format and paper size.
+
+## Notes
+
+Anything else the reviewer should know (shell, branch policy, words the business uses for things).

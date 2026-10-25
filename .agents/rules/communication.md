@@ -7,6 +7,7 @@ How to explain findings, reviews, and reports to the user and their team. Produc
 - Short sentences, one idea each. Tables and checklists over long prose.
 - Use the user's own terms and the names on screen (menus, buttons, statuses, roles), not component, route, or variable names.
 - Explain technical causes through their effect on the business: "the total is Rp 50.000 too low because the old catalog price is used", not the function that reads it.
+- When a flow is abstract, use a short analogy from the user's own operations (the shop floor, the warehouse, the cashier).
 - Reply in the language the user writes in.
 - Lead with the answer or the result, then the detail.
 - Do not over-inform. Leave out steps, logs, and caveats the reader does not need to act.

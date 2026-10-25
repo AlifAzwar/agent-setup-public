@@ -18,7 +18,7 @@ irm https://raw.githubusercontent.com/AlifAzwar/agent-setup-public/main/install.
 curl -fsSL https://raw.githubusercontent.com/AlifAzwar/agent-setup-public/main/install.sh | bash
 ```
 
-Safe to run in an existing project: files you already have are kept, and an existing `AGENTS.md` is left alone (the template is saved as `AGENTS.template.md` to merge by hand). To refresh existing skills and rules, set `AGENT_SETUP_UPDATE=1` before running (PowerShell: `$env:AGENT_SETUP_UPDATE = "1"`).
+Safe to run in an existing project: files you already have are kept, and an existing `AGENTS.md` is left alone (the template is saved as `AGENTS.template.md` to merge by hand). To refresh existing skills and rules, set `AGENT_SETUP_UPDATE=1` before running (PowerShell: `$env:AGENT_SETUP_UPDATE = "1"`). Any file you changed is backed up to `.agents-backup/<date>/` before it is replaced, and filled `references/project.md` files are never touched.
 
 ---
 
