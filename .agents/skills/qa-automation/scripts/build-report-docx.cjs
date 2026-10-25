@@ -100,7 +100,13 @@ function block(b) {
   if (b.table) return table(b.table);
   if (b.figure) return figure(b.figure);
   if (b.pagebreak) return [new Paragraph({ children: [new PageBreak()] })];
-  if (b.code) return [para([run(b.code, { font: "Courier New", size: 20 })], { alignment: AlignmentType.LEFT })];
+  if (b.code)
+    return [
+      para(
+        b.code.split("\n").map((line, i) => run(line, { font: "Courier New", size: 18, break: i ? 1 : 0 })),
+        { alignment: AlignmentType.LEFT, spacing: { line: 240, after: 120 }, shading: { type: ShadingType.CLEAR, fill: "F2F2F2" } },
+      ),
+    ];
   throw new Error(`Unknown block: ${JSON.stringify(b).slice(0, 80)}`);
 }
 

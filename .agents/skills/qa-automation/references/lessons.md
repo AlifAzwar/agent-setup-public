@@ -37,3 +37,8 @@ Each item cost at least one wasted run. Check them before writing tests.
 - **Guide vs. app wording.** The guide may lag behind the app. Record renamed labels as notes in a separate table; fail only on behavior.
 - **Fixes cause regressions.** A dedupe fix removed standalone items that shared a product with a bundle. Always re-run the whole wave after fixes, not only the fixed codes.
 - **Decide expected behavior yourself.** Check the PRD (e.g. "package price + swap delta"), the guide, and the code, then state the verdict.
+
+## Before merge
+
+- **Verify a frontend-only fix without a deploy.** Run the fix branch locally (dev server pointed at the staging API) and set `QA_BASE_URL=http://localhost:<port>`. The saved session belongs to the staging origin: copy `.auth/<role>.json` to `<role>-local.json`, change the origin and cookie domain to localhost, and re-save both files after each test because tokens rotate.
+- **Another project may hold the port.** If port 3000 is busy, use a different one instead of stopping someone else's dev server.
