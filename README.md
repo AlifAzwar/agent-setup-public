@@ -42,7 +42,7 @@ Safe to run in an existing project: files you already have are kept, and an exis
 * **`vercel-composition-patterns`:** Modern React 19 composition patterns, compound components, and clean state lifting.
 * **`no-ai-slop`:** Eliminates robotic cadence, cheesy buzzwords, and unnecessary code comments.
 * **`review`:** Read-only pre-landing review workflow with confidence scoring and risk audit.
-* **`qa-automation`:** Turns a QA scenario guide into Playwright tests that run against staging in headless Edge, verifies each failure with screenshots and source code, and writes a Word report (table of contents, findings, screenshots). Reports stay readable for non-developers; new bugs get a separate block with the API call, payload, and response (secrets masked). Includes a re-test checklist for developer fixes.
+* **`qa-automation`:** Turns a QA scenario guide into Playwright tests that run against staging in headless Edge, verifies each failure with screenshots and source code, and writes a Word report (table of contents, findings, screenshots). Reports stay readable for non-developers; new bugs get a separate block with the API call, payload, and response (secrets masked). Includes a re-test checklist for developer fixes, short bug tickets with red-circled screenshots, and casual chat-ready messages for forwarding bugs to the team.
 * **`review-prd-sync`:** Reads a new PRD or spec, syncs every repo, checks each requirement against the real code, and classifies it as KEEP / MODIFY / NEW with a plain-language summary and action plan. Fill `references/project.md` once per project.
 
 ### 4. Automated CI Workflow (`.github/workflows/ci.yml`)

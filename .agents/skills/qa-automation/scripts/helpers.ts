@@ -143,3 +143,63 @@ export async function persistSession(page: Page) {
 }
 
 export const rupiah = (s: string) => Number(s.replace(/[^0-9]/g, ""));
+
+/**
+ * Draw a red circle around an element, with an optional short label, for ticket screenshots
+ * (e.g. the wrong status next to the correct one). Take the screenshot afterwards; call the
+ * returned function to remove the drawing. The label is kept inside the viewport.
+ */
+export async function circleRed(page: Page, target: Locator, label?: string): Promise<() => Promise<void>> {
+  await target.scrollIntoViewIfNeeded();
+  const box = await target.boundingBox();
+  if (!box) throw new Error("circleRed: target is not visible");
+  const id = `qa-mark-${Math.random().toString(36).slice(2, 8)}`;
+  await page.evaluate(
+    ({ box, label, id }) => {
+      const pad = 10;
+      const left = Math.max(2, box.x - pad);
+      const right = Math.min(window.innerWidth - 2, box.x + box.width + pad);
+      const ring = document.createElement("div");
+      ring.dataset.qaMark = id;
+      Object.assign(ring.style, {
+        position: "fixed",
+        boxSizing: "border-box",
+        left: `${left}px`,
+        top: `${box.y - pad / 2}px`,
+        width: `${right - left}px`,
+        height: `${box.height + pad}px`,
+        border: "3px solid #e11d1d",
+        borderRadius: "50%",
+        zIndex: "2147483647",
+        pointerEvents: "none",
+      });
+      document.body.appendChild(ring);
+      if (!label) return;
+      const tag = document.createElement("div");
+      tag.dataset.qaMark = id;
+      tag.textContent = label;
+      Object.assign(tag.style, {
+        position: "fixed",
+        top: `${box.y + box.height / 2 - 11}px`,
+        background: "#e11d1d",
+        color: "#fff",
+        font: "600 12px sans-serif",
+        padding: "3px 7px",
+        borderRadius: "4px",
+        whiteSpace: "nowrap",
+        zIndex: "2147483647",
+        pointerEvents: "none",
+      });
+      document.body.appendChild(tag);
+      // Right of the circle when it fits, otherwise left of it, so the label never covers the target.
+      const fitsRight = right + 6 + tag.offsetWidth <= window.innerWidth - 4;
+      tag.style.left = `${fitsRight ? right + 6 : Math.max(4, left - tag.offsetWidth - 6)}px`;
+    },
+    { box, label, id },
+  );
+  return async () => {
+    await page.evaluate((id) => {
+      for (const el of document.querySelectorAll(`[data-qa-mark="${id}"]`)) el.remove();
+    }, id);
+  };
+}

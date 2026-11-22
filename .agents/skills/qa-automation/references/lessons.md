@@ -24,6 +24,8 @@ Each item cost at least one wasted run. Check them before writing tests.
 - **Unique data per run.** A duplicate SKU or phone number from an earlier run turns a valid test into a validation error. Use `testData()`.
 - **Stable ids across worker restarts.** A module-level `Date.now()` is recomputed when a worker restarts after a failure. Generate the id once in the config (`process.env.QA_SESSION ??= …`) so every worker shares it.
 - **Order numbers can change on save.** A temporary number shown before saving may differ from the stored one. Read the number from the success message.
+- **Captured responses are often cut short.** A response body stored with `.slice(0, 500)` is no longer valid JSON, so `JSON.parse` fails silently and the id is lost. Pull ids and numbers out with a regex, or read the record back from the API.
+- **Data created by one flow can drop fields in the next.** Compare the source record with the record it creates (order → sales order: delivery type, fees, address). A field that is always the same hard-coded value is a bug worth a separate check.
 
 ## Flow design
 
@@ -34,6 +36,8 @@ Each item cost at least one wasted run. Check them before writing tests.
 ## Judgment
 
 - **Staging may be ahead of your checkout.** Labels on screen that are not in the code mean a newer deploy: pull before concluding anything.
+- **Staging may also be behind.** Before re-testing a fix there, prove the deploy: search the loaded JS bundle for a string the new commit adds, and call a route the commit adds (405 on a wrong method means the route exists, 404 means it is not deployed).
+- **Permission checks without creating data.** Call each guarded action with a zero UUID or an empty body as each role: 403 means the permission blocked it, 400/404/422 means it passed the permission check. Then try opening hidden pages by URL (`?tab=…`); a hidden menu item is not a permission.
 - **Guide vs. app wording.** The guide may lag behind the app. Record renamed labels as notes in a separate table; fail only on behavior.
 - **Fixes cause regressions.** A dedupe fix removed standalone items that shared a product with a bundle. Always re-run the whole wave after fixes, not only the fixed codes.
 - **Decide expected behavior yourself.** Check the PRD (e.g. "package price + swap delta"), the guide, and the code, then state the verdict.
