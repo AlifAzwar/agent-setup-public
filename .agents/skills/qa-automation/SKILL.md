@@ -1,7 +1,7 @@
 ---
 name: qa-automation
-description: "Run end-to-end QA against a staging web app with Playwright in a headless background browser, mapping each test to a scenario code from a QA guide (e.g. CO-1, OL-5, QN-3), verifying every failure with screenshots and source code, and delivering a Word (.docx) report with table of contents, findings, and screenshots. Also covers re-testing after developer fixes (commit → finding checklist). Use when the user asks for QA automation, test scenarios from a QA/PRD document, a test report with screenshots, or a re-check of fixes on staging."
-version: 1.0.0
+description: "Run end-to-end QA against a staging web app with Playwright in a headless background browser, mapping each test to a scenario code from a QA guide (e.g. CO-1, OL-5, QN-3), verifying every failure with screenshots and source code, and delivering a Word (.docx) report with table of contents, findings, and screenshots. Also covers re-testing after developer fixes (commit → finding checklist), short bug tickets with annotated screenshots, and chat-ready (WhatsApp) messages in the user's casual style. Use when the user asks for QA automation, test scenarios from a QA/PRD document, a test report with screenshots, a re-check of fixes on staging, a bug ticket, or a message to send to the team."
+version: 1.1.0
 ---
 
 # QA Automation → Screenshot → Report
@@ -95,6 +95,44 @@ When developers push fixes:
 2. Rerun the affected wave with fresh data. Add a test for every fix that had no direct test (e.g. session expiry).
 3. Look for regressions introduced by the fixes themselves.
 4. Report a checklist: **Fixed / Partial / Not touched / Not a bug / New regression**, each with the test code and a screenshot.
+5. When someone says "commit X fixes it", read that commit's diff and re-test on that exact version before agreeing. Check every branch, not only `main`, and check whether staging already runs it (step 3: a string only the new commit adds, or a new API route answering 405 instead of 404).
+6. Move a bug ticket to the done list and add the `fixed` label only after the re-test passes. Otherwise leave it where it is and say what still fails.
+
+### 9. Bug tickets and chat messages
+
+Tickets are read by developers; chat messages are read by a PM on a phone. Both stay short.
+
+**Ticket** (Trello or similar, added to the QA list, never editing other cards):
+
+- Title: `[BUG - <Module>] <what the user sees, plain words> (P0–P3)`. Map severity: P0 = Critical, P1 = High, P2 = Medium, P3 = Low.
+- **Overview**: one or two very short plain sentences, what breaks plus one consequence, with a concrete example amount or record number. No field names, code, or JSON here. Example: "After the down payment is paid, the courier fee of the order disappears (Rp 0). The order no longer shows in the shipping report."
+- **Root Cause**: file and line, technical words allowed.
+- **Saran / Suggestion**: one line.
+- Last line: the report name and the version tested.
+- Attach the screenshot. When the bug is a difference between two rows or two states, draw a red circle around both with `circleRed()` (helpers) and a short label ("A: paid in full, still Partial" / "B: Paid, correct"), then attach a cropped copy that fits a phone screen plus the full page.
+
+**Chat message** (WhatsApp, Slack) to forward a bug: write the way the user writes, casual and straight to the point, not detailed but clear. No headings, bullets, bold, or technical words. One line on what is wrong, one line on when it happens, then the ticket link:
+
+```
+bg @<PM> ada bug di sales order pas dibikin otomatis status bayarnya selalu ditulis partial, even DP nya udah dibayar lunas
+
+ini case nya terjadi kalo pelanggan bayar lunas di tahap DP
+<ticket link>
+```
+
+**Link list** (several tickets at once): group by priority, title plus raw link, nothing else:
+
+```
+*P0*
+1. <short title>
+<raw link>
+
+*P1*
+2. <short title>
+<raw link>
+```
+
+Match the user's language and the names they use for people and menus. If the user says a text is still too much, cut it to one sentence and keep that length for the rest of the conversation.
 
 ## Reporting rules
 
@@ -158,7 +196,7 @@ Technical evidence (for developers)
 
 - `scripts/playwright.qa.config.ts`: staging config, headless Edge, JSON/HTML reporters, screenshots, shared run id.
 - `scripts/login-manual.mjs`: one-time manual login in a visible Edge window, saves the session.
-- `scripts/helpers.ts`: run data, `shot`, `note`, `captureApi`, `goMenu`, `message`, `pickCombobox`, `persistSession`, state shared between tests.
+- `scripts/helpers.ts`: run data, `shot`, `note`, `captureApi`, `goMenu`, `message`, `pickCombobox`, `persistSession`, `circleRed` (red circle + label for ticket screenshots), state shared between tests.
 - `scripts/explore.mjs`: headless DOM dump and screenshot of one screen using the saved session.
 - `scripts/summarize.cjs`: Playwright JSON → `summary.json`.
 - `scripts/build-report-docx.cjs`: report spec JSON → `.docx` with TOC, tables, figures.
